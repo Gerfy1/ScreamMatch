@@ -1,8 +1,6 @@
 package br.com.gerfy.ScreamMatch;
 
-import br.com.gerfy.ScreamMatch.model.DadosSerie;
-import br.com.gerfy.ScreamMatch.service.ConsumoAPI;
-import br.com.gerfy.ScreamMatch.service.ConverteDados;
+import br.com.gerfy.ScreamMatch.principal.Main;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,13 +13,8 @@ public class ScreamMatchApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		var consumoAPI = new ConsumoAPI();
-		var json = 	consumoAPI.obterDados("https://www.omdbapi.com/?t=gilmore+girls&apikey=43454279");
-		//Sstem.out.println(json);
-		//json = consumoAPI.obterDados("https://coffee.alexflipnote.dev/random.json");
-		System.out.println(json);
-		ConverteDados conversor = new ConverteDados();
-		DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
-		System.out.println(dados);
+		Main main = new Main();
+		 main.exibirMenu();
+
 	}
 }
