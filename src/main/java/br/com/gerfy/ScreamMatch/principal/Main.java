@@ -1,9 +1,6 @@
 package br.com.gerfy.ScreamMatch.principal;
 
-import br.com.gerfy.ScreamMatch.model.DadosSerie;
-import br.com.gerfy.ScreamMatch.model.DadosTemporada;
-import br.com.gerfy.ScreamMatch.model.Episodio;
-import br.com.gerfy.ScreamMatch.model.Serie;
+import br.com.gerfy.ScreamMatch.model.*;
 import br.com.gerfy.ScreamMatch.repository.SerieRepository;
 import br.com.gerfy.ScreamMatch.service.ConsumoAPI;
 import br.com.gerfy.ScreamMatch.service.ConverteDados;
@@ -39,6 +36,8 @@ public class Main {
                     4 - Buscar série por titulo
                     5 - Buscar sério por ator
                     6 - 5 Melhores séries
+                    7 - Buscar séries por categoria
+                    8 - Filtrar temporadas e avaliação
                     
                     0 - Sair
                     """;
@@ -65,6 +64,13 @@ public class Main {
                     break;
                 case 6:
                     buscarTop5Series();
+                    break;
+                case 7:
+                    buscarSeriesPorCategoria();
+                    break;
+                case 8:
+                    buscarTemporadaEAvaliacao();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -73,7 +79,6 @@ public class Main {
             }
         }
     }
-
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
         Serie serie = new Serie(dados);
@@ -141,6 +146,23 @@ public class Main {
     }
     private void buscarTop5Series(){
         List <Serie> seriesTop = serieRepositorio.findTop5ByOrderByAvaliacaoDesc();
-        seriesTop.forEach(s->System.out.println(s.getTitulo() + " avaliacao: " +s.getAvaliacao()));
+        seriesTop.forEach(s->System.out.println(s.getTitulo() + " avaliaçao: " +s.getAvaliacao()));
+    }
+    private void buscarSeriesPorCategoria() {
+        System.out.println("Digite a categoria/gênero desejado: ");
+        var nomeGenero = leitura.nextLine();
+        Categoria categoria = Categoria.fromPortugues(nomeGenero);
+        List<Serie> seriesPorCategoria = serieRepositorio.findByGenero(categoria);
+        System.out.println("Series da categoria " +nomeGenero + ":");
+        seriesPorCategoria.forEach(System.out::println);
+    }
+    private void buscarTemporadaEAvaliacao() {
+        System.out.println("Digite o número maximo de temporadas?: ");
+        var numeroMaxTemp = leitura.nextInt();
+        System.out.println("Qual numero mínimo de avaliação da série?: ");
+        var numeroMinimoAv = leitura.nextInt();
+        List<Serie> seriesFiltradas = serieRepositorio.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThan(numeroMaxTemp, numeroMinimoAv);
+        System.out.println("Series filtradas: ");
+        seriesFiltradas.forEach(s->System.out.println(s.getTitulo() + " avaliação: " + s.getAvaliacao()));
     }
 }
