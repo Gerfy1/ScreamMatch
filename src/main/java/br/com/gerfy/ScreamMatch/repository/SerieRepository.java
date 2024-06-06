@@ -1,8 +1,10 @@
 package br.com.gerfy.ScreamMatch.repository;
 
 import br.com.gerfy.ScreamMatch.model.Categoria;
+import br.com.gerfy.ScreamMatch.model.Episodio;
 import br.com.gerfy.ScreamMatch.model.Serie;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,5 +18,17 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     List<Serie> findByGenero(Categoria genero);
 
-    List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThan(int numeroMaxTemp, double numeroMinimoAv);
+   // List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThan(int numeroMaxTemp, double numeroMinimoAv);
+
+    @Query("SELECT s FROM Serie s WHERE s.totalTemporadas <=:numeroMaxTemp AND s.avaliacao >=:numeroMinimoAv")
+    List<Serie> seriesPorTemporadaEAvaliacao(int numeroMaxTemp, double numeroMinimoAv);
+
+    @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE e.titulo ILIKE %:trechoEpisodio%")
+    List<Episodio> episodiosPorTrecho(String trechoEpisodio);
+
+    @Query("SELECT DISTINCT e FROM Serie s JOIN s.episodios e WHERE s = :serie ORDER BY e.avaliacao DESC LIMIT 5")
+    List<Episodio> topEpisodiosPorSerie(Serie serie);
+
+    @Query("SELECT DISTINCT e FROM Serie s JOIN s.episodios e WHERE s = :serie AND YEAR(e.dataDeLancamento) >=:anoLançamento")
+    List<Episodio> episodiosPorSerieEAno(Serie serie, int anoLançamento);
 }
