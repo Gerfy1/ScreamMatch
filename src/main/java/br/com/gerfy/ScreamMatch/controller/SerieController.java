@@ -1,26 +1,37 @@
 package br.com.gerfy.ScreamMatch.controller;
 
 import br.com.gerfy.ScreamMatch.dto.SerieDTO;
-import br.com.gerfy.ScreamMatch.model.Serie;
-import br.com.gerfy.ScreamMatch.repository.SerieRepository;
+import br.com.gerfy.ScreamMatch.service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/series")
 public class SerieController {
 
     @Autowired
-    private SerieRepository repository;
+    private SerieService servico;
 
-    @GetMapping("/series")
+    @GetMapping()
     public List<SerieDTO> obterSeries() {
-        return repository.findAll()
-                .stream()
-                .map(s -> new SerieDTO(s.getId(), s.getTitulo(), s.getTotalTemporadas(), s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getImgPoster(), s.getSinopse()))
-                .collect(Collectors.toList());
+        return servico.obterSeries();
     }
+    @GetMapping("/top5")
+    public List<SerieDTO> obterSerieTop5() {
+        return servico.obterTop5Series();
+    }
+    @GetMapping("/lancamentos")
+    public List<SerieDTO> obterLancamentos(){
+        return servico.obterLancamento();
+    }
+    @GetMapping("/{id}")
+    public SerieDTO obterSeriePorId(@PathVariable Long id){
+         return servico.obterPorId(id);
+    }
+
 }
