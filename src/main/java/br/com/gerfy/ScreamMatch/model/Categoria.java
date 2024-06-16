@@ -1,7 +1,7 @@
 package br.com.gerfy.ScreamMatch.model;
 
 public enum Categoria {
-    ACAO("Action", "Açao"),
+    ACAO("Action", "Ação"),
     ROMANCE("Romance", "Romance"),
     COMEDIA("Comedy", "Comédia"),
     DRAMA("Drama", "Drama"),

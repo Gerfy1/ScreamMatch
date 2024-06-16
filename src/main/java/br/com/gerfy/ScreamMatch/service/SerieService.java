@@ -1,6 +1,8 @@
 package br.com.gerfy.ScreamMatch.service;
 
+import br.com.gerfy.ScreamMatch.dto.EpisodioDTO;
 import br.com.gerfy.ScreamMatch.dto.SerieDTO;
+import br.com.gerfy.ScreamMatch.model.Categoria;
 import br.com.gerfy.ScreamMatch.model.Serie;
 import br.com.gerfy.ScreamMatch.repository.SerieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +42,28 @@ public class SerieService {
             return new SerieDTO(s.getId(), s.getTitulo(), s.getTotalTemporadas(), s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getImgPoster(), s.getSinopse());
         }
         return null;
+    }
+
+    public List<EpisodioDTO> obterTodasTemporadas(Long id) {
+        Optional<Serie> serie = repository.findById(id);
+        if (serie.isPresent()){
+            Serie s = serie.get();
+            return s.getEpisodios().stream()
+                    .map(e-> new EpisodioDTO(e.getTemporada(), e.getNumeroEP(), e.getTitulo()))
+                    .collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    public List<EpisodioDTO> obterTemporadasPorNumero(Long id, Long numero) {
+        return repository.obterEpisodiosPorTemporada(id, numero)
+                .stream()
+                .map(e-> new EpisodioDTO(e.getTemporada(), e.getNumeroEP(), e.getTitulo()))
+                .collect(Collectors.toList());
+    }
+
+    public List<SerieDTO> obterSeriePorGenero(String genero) {
+        Categoria categoria = Categoria.fromPortugues(genero);
+        return converteDados(repository.findByGenero(categoria));
     }
 }
