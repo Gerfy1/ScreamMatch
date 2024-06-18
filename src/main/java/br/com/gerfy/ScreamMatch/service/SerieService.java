@@ -12,11 +12,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 public class SerieService {
 
     @Autowired
     private SerieRepository repository;
+    @Autowired
+    private SerieRepository serieRepository;
 
     public List<SerieDTO> obterSeries() {
         return converteDados(repository.findTop5ByOrderByAvaliacaoDesc());
@@ -65,5 +69,13 @@ public class SerieService {
     public List<SerieDTO> obterSeriePorGenero(String genero) {
         Categoria categoria = Categoria.fromPortugues(genero);
         return converteDados(repository.findByGenero(categoria));
+    }
+
+    public List<EpisodioDTO> obterTop5Episodios(Long id) {
+        var serie = serieRepository.findById(id).get();
+        return serieRepository.topEpisodiosPorSerie(serie)
+                .stream()
+                .map(e -> new EpisodioDTO(e.getTemporada(), e.getNumeroEP(), e.getTitulo()))
+                .collect(Collectors.toList());
     }
 }

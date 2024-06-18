@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SerieRepository extends JpaRepository<Serie, Long> {
-    Optional <Serie> findByTituloContainingIgnoreCase(String nomeSerie);
+    Optional<Serie> findByTituloContainingIgnoreCase(String nomeSerie);
 
     List<Serie> findByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(String nomeAtor, double avaliacao);
 
@@ -18,7 +18,7 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     List<Serie> findByGenero(Categoria genero);
 
-   // List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThan(int numeroMaxTemp, double numeroMinimoAv);
+    // List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThan(int numeroMaxTemp, double numeroMinimoAv);
 
     @Query("SELECT s FROM Serie s WHERE s.totalTemporadas <=:numeroMaxTemp AND s.avaliacao >=:numeroMinimoAv")
     List<Serie> seriesPorTemporadaEAvaliacao(int numeroMaxTemp, double numeroMinimoAv);
@@ -42,4 +42,5 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE s.id = :id AND e.temporada = :numero")
     List<Episodio> obterEpisodiosPorTemporada(Long id, Long numero);
+
 }

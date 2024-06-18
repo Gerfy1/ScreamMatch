@@ -2,7 +2,6 @@ package br.com.gerfy.ScreamMatch.controller;
 
 import br.com.gerfy.ScreamMatch.dto.EpisodioDTO;
 import br.com.gerfy.ScreamMatch.dto.SerieDTO;
-import br.com.gerfy.ScreamMatch.model.Episodio;
 import br.com.gerfy.ScreamMatch.service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +45,10 @@ public class SerieController {
     @GetMapping("/categoria/{genero}")
     public List<SerieDTO> obterSeriePorGenero(@PathVariable String genero){
         return servico.obterSeriePorGenero(genero);
-
+    }
+    @GetMapping("{id}/temporadas/top")
+    public List<EpisodioDTO> obterTop5Episodios(@PathVariable Long id){
+        return servico.obterTop5Episodios(id);
     }
 
 }
